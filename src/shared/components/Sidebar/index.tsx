@@ -13,6 +13,7 @@ import {
 import { Box } from "@mui/system";
 import { useMatch, useNavigate, useResolvedPath } from "react-router-dom";
 import { useDrawerContext } from "../../contexts/DrawerContext";
+import { useAppThemeContext } from "../../contexts/ThemeContext";
 
 interface ISidebarProps {
   children: React.ReactNode;
@@ -54,6 +55,7 @@ export const Sidebar: React.FC<ISidebarProps> = ({ children }) => {
   const theme = useTheme();
   const smDown = useMediaQuery(theme.breakpoints.down("sm"));
   const { isDrawerOpen, toggleDrawerOpen, drawerOptions } = useDrawerContext();
+  const { toggleTheme, themeName } = useAppThemeContext();
 
   return (
     <>
@@ -93,6 +95,18 @@ export const Sidebar: React.FC<ISidebarProps> = ({ children }) => {
                   onClick={smDown ? toggleDrawerOpen : undefined}
                 />
               ))}
+            </List>
+          </Box>
+          <Box>
+            <List component="nav">
+              <ListItemButton onClick={toggleTheme}>
+                <ListItemIcon>
+                  <Icon color="warning">
+                    {themeName === "dark" ? "dark_mode" : "light_mode"}
+                  </Icon>
+                </ListItemIcon>
+                <ListItemText primary="Alternar tema" />
+              </ListItemButton>
             </List>
           </Box>
         </Box>
