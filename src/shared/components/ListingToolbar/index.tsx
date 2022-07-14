@@ -9,7 +9,7 @@ import {
   Icon,
 } from "@mui/material";
 
-interface IToolbarProps {
+interface IListingToolbarProps {
   searchText?: string;
   showInputSearch?: boolean;
   whenChangeSearchText?: (newText: string) => void;
@@ -18,7 +18,7 @@ interface IToolbarProps {
   whenClickOnButton?: () => void;
 }
 
-export const Toolbar: React.FC<IToolbarProps> = ({
+export const ListingToolbar: React.FC<IListingToolbarProps> = ({
   searchText = "",
   showInputSearch = false,
   whenChangeSearchText,
