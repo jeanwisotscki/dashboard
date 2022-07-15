@@ -6,6 +6,8 @@ import {
   Icon,
   Divider,
   Skeleton,
+  Typography,
+  useMediaQuery,
 } from "@mui/material";
 
 interface IDetailsToolbarProps {
@@ -50,12 +52,15 @@ export const DetailsToolbar: React.FC<IDetailsToolbarProps> = ({
   onClickInSaveAndBack,
 }) => {
   const theme = useTheme();
+  const smDown = useMediaQuery(theme.breakpoints.down("sm"));
+  const mdDown = useMediaQuery(theme.breakpoints.down("md"));
 
   return (
     <Box
       height={theme.spacing(7)}
       display="flex"
       alignItems="center"
+      justifyContent={!smDown && !mdDown ? "initial" : "space-around"}
       gap={1}
       marginX={1}
       padding={1}
@@ -66,42 +71,68 @@ export const DetailsToolbar: React.FC<IDetailsToolbarProps> = ({
         <Button
           variant="contained"
           color="primary"
-          startIcon={<Icon>save</Icon>}
+          startIcon={smDown ? null : <Icon>save</Icon>}
           disableElevation
           onClick={onClickInSave}
         >
-          Salvar
+          <Typography
+            variant="button"
+            whiteSpace="nowrap"
+            textOverflow="ellipsis"
+            overflow="hidden"
+          >
+            Salvar
+          </Typography>
         </Button>
       )}
       {showSaveButtonLoading && <Skeleton width={110} height={50} />}
 
-      {showSaveAndBackButton && !showSaveAndBackButtonLoading && (
-        <Button
-          variant="outlined"
-          color="primary"
-          startIcon={<Icon>save</Icon>}
-          disableElevation
-          onClick={onClickInSaveAndBack}
-        >
-          Salvar e voltar
-        </Button>
+      {showSaveAndBackButton &&
+        !showSaveAndBackButtonLoading &&
+        !smDown &&
+        !mdDown && (
+          <Button
+            variant="outlined"
+            color="primary"
+            startIcon={<Icon>save</Icon>}
+            disableElevation
+            onClick={onClickInSaveAndBack}
+          >
+            <Typography
+              variant="button"
+              whiteSpace="nowrap"
+              textOverflow="ellipsis"
+              overflow="hidden"
+            >
+              Salvar e voltar
+            </Typography>
+          </Button>
+        )}
+      {showSaveAndBackButtonLoading && !smDown && !mdDown && (
+        <Skeleton width={180} height={50} />
       )}
-      {showSaveAndBackButtonLoading && <Skeleton width={180} height={50} />}
 
       {showDeleteButton && !showDeleteButtonLoading && (
         <Button
           variant="outlined"
           color="primary"
-          startIcon={<Icon>delete</Icon>}
+          startIcon={smDown ? null : <Icon>delete</Icon>}
           disableElevation
           onClick={onClickInDelete}
         >
-          Apagar
+          <Typography
+            variant="button"
+            whiteSpace="nowrap"
+            textOverflow="ellipsis"
+            overflow="hidden"
+          >
+            Apagar
+          </Typography>
         </Button>
       )}
       {showDeleteButtonLoading && <Skeleton width={110} height={50} />}
 
-      {showAddButton && !showAddButtonLoading && (
+      {showAddButton && !showAddButtonLoading && !smDown && !mdDown && (
         <Button
           variant="outlined"
           color="primary"
@@ -109,12 +140,23 @@ export const DetailsToolbar: React.FC<IDetailsToolbarProps> = ({
           disableElevation
           onClick={onClickInAdd}
         >
-          {textAddButton}
+          <Typography
+            variant="button"
+            whiteSpace="nowrap"
+            textOverflow="ellipsis"
+            overflow="hidden"
+          >
+            {textAddButton}
+          </Typography>
         </Button>
       )}
-      {showAddButtonLoading && <Skeleton width={110} height={50} />}
+      {showAddButtonLoading && !smDown && !mdDown && (
+        <Skeleton width={110} height={50} />
+      )}
 
-      <Divider variant="middle" orientation="vertical" />
+      {!smDown && !mdDown && (
+        <Divider variant="middle" orientation="vertical" />
+      )}
       {showBackButton && !showBackButtonLoading && (
         <Button
           variant="outlined"
@@ -123,7 +165,14 @@ export const DetailsToolbar: React.FC<IDetailsToolbarProps> = ({
           disableElevation
           onClick={onClickInBack}
         >
-          Voltar
+          <Typography
+            variant="button"
+            whiteSpace="nowrap"
+            textOverflow="ellipsis"
+            overflow="hidden"
+          >
+            Voltar
+          </Typography>
         </Button>
       )}
       {showBackButtonLoading && <Skeleton width={110} height={50} />}
