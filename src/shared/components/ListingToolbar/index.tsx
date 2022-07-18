@@ -8,6 +8,7 @@ import {
   InputAdornment,
   Icon,
 } from "@mui/material";
+import { Environment } from "../../environment";
 
 interface IListingToolbarProps {
   searchText?: string;
@@ -44,7 +45,7 @@ export const ListingToolbar: React.FC<IListingToolbarProps> = ({
           value={searchText}
           onChange={(e) => whenChangeSearchText?.(e.target.value)}
           size="small"
-          placeholder="Pesquisar"
+          placeholder={Environment.PLACEHOLDER_INP_DE_BUSCA}
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
