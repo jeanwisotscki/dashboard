@@ -1,5 +1,5 @@
-import { DetailsToolbar } from "../shared/components/DetailsToolbar";
-import { LayoutBasePage } from "../shared/layouts/LayoutBasePage";
+import { DetailsToolbar } from "../../shared/components/DetailsToolbar";
+import { LayoutBasePage } from "../../shared/layouts/LayoutBasePage";
 
 export const Dashboard = () => {
   return (

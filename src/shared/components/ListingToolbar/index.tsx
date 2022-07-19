@@ -13,19 +13,19 @@ import { Environment } from "../../environment";
 interface IListingToolbarProps {
   searchText?: string;
   showInputSearch?: boolean;
-  whenChangeSearchText?: (newText: string) => void;
+  onChangeSearchText?: (newText: string) => void;
   addButtonText?: string;
   showAddButton?: boolean;
-  whenClickOnButton?: () => void;
+  onClickOnButton?: () => void;
 }
 
 export const ListingToolbar: React.FC<IListingToolbarProps> = ({
   searchText = "",
   showInputSearch = false,
-  whenChangeSearchText,
+  onChangeSearchText,
   addButtonText = "Novo",
   showAddButton = true,
-  whenClickOnButton,
+  onClickOnButton,
 }) => {
   const theme = useTheme();
 
@@ -43,7 +43,7 @@ export const ListingToolbar: React.FC<IListingToolbarProps> = ({
       {showInputSearch && (
         <TextField
           value={searchText}
-          onChange={(e) => whenChangeSearchText?.(e.target.value)}
+          onChange={(e) => onChangeSearchText?.(e.target.value)}
           size="small"
           placeholder={Environment.PLACEHOLDER_INP_DE_BUSCA}
           InputProps={{
@@ -58,7 +58,7 @@ export const ListingToolbar: React.FC<IListingToolbarProps> = ({
       <Box display="flex" justifyContent="end" flex={1}>
         {showAddButton && (
           <Button
-            onClick={whenClickOnButton}
+            onClick={onClickOnButton}
             variant="contained"
             color="primary"
             startIcon={<Icon>add</Icon>}
