@@ -1,5 +1,7 @@
 import React from "react";
 import {
+  Icon,
+  IconButton,
   LinearProgress,
   Pagination,
   Paper,
@@ -28,6 +30,21 @@ export const Pessoas: React.FC = () => {
   const [rows, setRows] = React.useState<IListagemPessoa[]>([]);
   const [totalCount, setTotalCount] = React.useState(0);
   const [isLoading, setIsLoading] = React.useState(true);
+
+  const handleDelete = (id: number) => {
+    if (confirm("Realmente deseja apagar o registro?")) {
+      pessoasServices.deleteById(id).then((res) => {
+        if (res instanceof Error) {
+          alert(res.message);
+          return;
+        }
+
+        setRows((oldRows) => [...oldRows.filter((oldRow) => oldRow.id !== id)]);
+
+        return alert("Registro apagado com sucesso!");
+      });
+    }
+  };
 
   const busca = React.useMemo(() => {
     return searchParams.get("busca") || "";
@@ -86,7 +103,14 @@ export const Pessoas: React.FC = () => {
           <TableBody>
             {rows.map((row) => (
               <TableRow key={row.id}>
-                <TableCell>{row.id}</TableCell>
+                <TableCell>
+                  <IconButton onClick={() => handleDelete(row.id)} size="small">
+                    <Icon>delete</Icon>
+                  </IconButton>
+                  <IconButton size="small">
+                    <Icon>edit</Icon>
+                  </IconButton>
+                </TableCell>
                 <TableCell>{row.nomeCompleto}</TableCell>
                 <TableCell>{row.email}</TableCell>
               </TableRow>
