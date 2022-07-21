@@ -1,7 +1,7 @@
 import React from "react";
 import {
-  Box,
   LinearProgress,
+  Pagination,
   Paper,
   Table,
   TableBody,
@@ -33,11 +33,15 @@ export const Pessoas: React.FC = () => {
     return searchParams.get("busca") || "";
   }, [searchParams]);
 
+  const pagina = React.useMemo(() => {
+    return Number(searchParams.get("pagina") || "1");
+  }, [searchParams]);
+
   React.useEffect(() => {
     setIsLoading(true);
 
     debounce(() => {
-      pessoasServices.getAll(1, busca).then((res) => {
+      pessoasServices.getAll(pagina, busca).then((res) => {
         setIsLoading(false);
 
         if (res instanceof Error) {
@@ -50,7 +54,7 @@ export const Pessoas: React.FC = () => {
         console.log(res);
       });
     });
-  }, [busca]);
+  }, [busca, pagina]);
 
   return (
     <LayoutBasePage
@@ -61,7 +65,7 @@ export const Pessoas: React.FC = () => {
           showInputSearch
           searchText={busca}
           onChangeSearchText={(text) =>
-            setSearchParams({ busca: text }, { replace: true })
+            setSearchParams({ busca: text, pagina: "1" }, { replace: true })
           }
         />
       }
@@ -96,6 +100,22 @@ export const Pessoas: React.FC = () => {
               <TableRow>
                 <TableCell colSpan={3}>
                   <LinearProgress variant="indeterminate" />
+                </TableCell>
+              </TableRow>
+            )}
+            {totalCount > 0 && totalCount > Environment.LIMITE_DE_LINHAS && (
+              <TableRow>
+                <TableCell colSpan={3}>
+                  <Pagination
+                    page={pagina}
+                    count={Math.ceil(totalCount / Environment.LIMITE_DE_LINHAS)}
+                    onChange={(e, newPage) =>
+                      setSearchParams(
+                        { busca, pagina: newPage.toString() },
+                        { replace: false }
+                      )
+                    }
+                  />
                 </TableCell>
               </TableRow>
             )}

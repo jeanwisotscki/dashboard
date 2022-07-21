@@ -32,7 +32,9 @@ const getAll = async (
     if (data) {
       return {
         data,
-        totalCount: Number(headers["x-total-count"]) || 0,
+        totalCount: Number(
+          headers["x-total-count"] || Environment.LIMITE_DE_LINHAS
+        ),
       };
     }
 
