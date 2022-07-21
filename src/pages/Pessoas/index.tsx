@@ -13,7 +13,7 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { ListingToolbar } from "../../shared/components/ListingToolbar";
 import { useDebounce } from "../../shared/hooks/useDebounce";
 import { LayoutBasePage } from "../../shared/layouts/LayoutBasePage";
@@ -24,6 +24,8 @@ import {
 import { Environment } from "../../shared/environment";
 
 export const Pessoas: React.FC = () => {
+  const navigate = useNavigate();
+
   const [searchParams, setSearchParams] = useSearchParams();
   const { debounce } = useDebounce(1000, true);
 
@@ -107,7 +109,10 @@ export const Pessoas: React.FC = () => {
                   <IconButton onClick={() => handleDelete(row.id)} size="small">
                     <Icon>delete</Icon>
                   </IconButton>
-                  <IconButton size="small">
+                  <IconButton
+                    onClick={() => navigate(`/pessoas/detalhe/${row.id}`)}
+                    size="small"
+                  >
                     <Icon>edit</Icon>
                   </IconButton>
                 </TableCell>
