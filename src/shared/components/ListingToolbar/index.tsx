@@ -16,7 +16,7 @@ interface IListingToolbarProps {
   onChangeSearchText?: (newText: string) => void;
   addButtonText?: string;
   showAddButton?: boolean;
-  onClickOnButton?: () => void;
+  onClickAddButton?: () => void;
 }
 
 export const ListingToolbar: React.FC<IListingToolbarProps> = ({
@@ -25,7 +25,7 @@ export const ListingToolbar: React.FC<IListingToolbarProps> = ({
   onChangeSearchText,
   addButtonText = "Novo",
   showAddButton = true,
-  onClickOnButton,
+  onClickAddButton,
 }) => {
   const theme = useTheme();
 
@@ -58,7 +58,7 @@ export const ListingToolbar: React.FC<IListingToolbarProps> = ({
       <Box display="flex" justifyContent="end" flex={1}>
         {showAddButton && (
           <Button
-            onClick={onClickOnButton}
+            onClick={onClickAddButton}
             variant="contained"
             color="primary"
             startIcon={<Icon>add</Icon>}

@@ -86,6 +86,7 @@ export const Pessoas: React.FC = () => {
           onChangeSearchText={(text) =>
             setSearchParams({ busca: text, pagina: "1" }, { replace: true })
           }
+          onClickAddButton={() => navigate("/pessoas/detalhe/nova")}
         />
       }
     >
