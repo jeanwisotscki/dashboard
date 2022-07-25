@@ -4,18 +4,26 @@ import { useNavigate, useParams } from "react-router-dom";
 import { DetailsToolbar } from "../../shared/components/DetailsToolbar";
 import { LayoutBasePage } from "../../shared/layouts/LayoutBasePage";
 import { pessoasServices } from "../../shared/services/api/pessoas/pessoasServices";
-import { Form } from "@unform/web";
 import { VTextField } from "../../shared/forms/VTextField.tsx";
+import { Form } from "@unform/web";
+import { FormHandles } from "@unform/core";
+
+interface IFormData {
+  email: string;
+  cidadeId: string;
+  nomeCompleto: string;
+}
 
 export const DetalhePessoa: React.FC = () => {
   const { id = "nova" } = useParams<"id">();
   const navigate = useNavigate();
+  const formRef = React.useRef<FormHandles>(null);
 
   const [isLoading, setIsLoading] = React.useState(false);
   const [name, setName] = React.useState("");
 
-  const handleSave = () => {
-    console.log("salvar");
+  const handleSave = (data: IFormData) => {
+    console.log(data);
   };
 
   const handleDelete = (id: number) => {
@@ -61,16 +69,16 @@ export const DetalhePessoa: React.FC = () => {
           showDeleteButton={id !== "nova"}
           onClickInAdd={() => navigate("/pessoas/detalhe/nova")}
           onClickInBack={() => navigate("/pessoas")}
-          onClickInSave={() => handleSave()}
           onClickInDelete={() => handleDelete(Number(id))}
-          onClickInSaveAndBack={() => handleSave()}
+          onClickInSave={() => formRef.current?.submitForm()}
+          onClickInSaveAndBack={() => formRef.current?.submitForm()}
         />
       }
     >
-      <Form onSubmit={(dados) => console.log(dados)}>
+      <Form ref={formRef} onSubmit={handleSave}>
         <VTextField name="nomeCompleto" />
-
-        <button type="submit">submit</button>
+        <VTextField name="email" />
+        <VTextField name="cidadeId" />
       </Form>
 
       {isLoading && <LinearProgress variant="indeterminate" />}
