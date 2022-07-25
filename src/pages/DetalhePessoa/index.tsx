@@ -1,5 +1,4 @@
 import React from "react";
-import { LinearProgress } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import { DetailsToolbar } from "../../shared/components/DetailsToolbar";
 import { LayoutBasePage } from "../../shared/layouts/LayoutBasePage";
@@ -10,7 +9,7 @@ import { FormHandles } from "@unform/core";
 
 interface IFormData {
   email: string;
-  cidadeId: string;
+  cidadeId: number;
   nomeCompleto: string;
 }
 
@@ -23,7 +22,38 @@ export const DetalhePessoa: React.FC = () => {
   const [name, setName] = React.useState("");
 
   const handleSave = (data: IFormData) => {
-    console.log(data);
+    setIsLoading(true);
+
+    if (id === "nova") {
+      pessoasServices.create(data).then((res) => {
+        setIsLoading(false);
+
+        if (res instanceof Error) {
+          alert(res.message);
+          return;
+        }
+
+        alert("Registro criado com sucesso!");
+        navigate(`/pessoas/detalhe/${res}`);
+      });
+
+      return;
+    }
+
+    pessoasServices
+      .updateById(Number(id), { id: Number(id), ...data })
+      .then((res) => {
+        setIsLoading(false);
+
+        if (res instanceof Error) {
+          alert(res.message);
+          return;
+        }
+
+        alert("Registro editado com sucesso!");
+      });
+
+    return;
   };
 
   const handleDelete = (id: number) => {
@@ -54,6 +84,7 @@ export const DetalhePessoa: React.FC = () => {
         }
 
         setName(res.nomeCompleto);
+        formRef.current?.setData(res);
       });
     }
   }, [id]);
@@ -76,16 +107,10 @@ export const DetalhePessoa: React.FC = () => {
       }
     >
       <Form ref={formRef} onSubmit={handleSave}>
-        <VTextField name="nomeCompleto" />
-        <VTextField name="email" />
-        <VTextField name="cidadeId" />
+        <VTextField placeholder="Nome" name="nomeCompleto" />
+        <VTextField placeholder="Email" name="email" />
+        <VTextField placeholder="Cidade ID" name="cidadeId" />
       </Form>
-
-      {isLoading && <LinearProgress variant="indeterminate" />}
-      <div>
-        <h1>detalhe pessoa</h1>
-        <p>{id}</p>
-      </div>
     </LayoutBasePage>
   );
 };
