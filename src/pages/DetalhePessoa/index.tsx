@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Box, Grid, LinearProgress, Paper, Typography } from "@mui/material";
+import * as yup from "yup";
 
 import { DetailsToolbar } from "../../shared/components/DetailsToolbar";
 import { LayoutBasePage } from "../../shared/layouts/LayoutBasePage";
@@ -8,12 +9,19 @@ import { pessoasServices } from "../../shared/services/api/pessoas/pessoasServic
 import { VTextField } from "../../shared/forms/VTextField.tsx";
 import { VForm } from "../../shared/forms/VForm";
 import { useVForm } from "../../shared/forms/hooks/useVForm";
+import { IVFormErrors } from "../../shared/forms/helpers/IVFormErrors";
 
 interface IFormData {
   email: string;
   cidadeId: number;
   nomeCompleto: string;
 }
+
+const formValidationSchema: yup.SchemaOf<IFormData> = yup.object().shape({
+  nomeCompleto: yup.string().required().min(3),
+  email: yup.string().required().email(),
+  cidadeId: yup.number().required(),
+});
 
 export const DetalhePessoa: React.FC = () => {
   const { id = "nova" } = useParams<"id">();
@@ -24,50 +32,65 @@ export const DetalhePessoa: React.FC = () => {
   const [name, setName] = React.useState("");
 
   const handleSave = (data: IFormData) => {
-    setIsLoading(true);
+    formValidationSchema
+      .validate(data, { abortEarly: false })
+      .then((validatedData) => {
+        setIsLoading(true);
 
-    if (id === "nova") {
-      pessoasServices.create(data).then((res) => {
-        setIsLoading(false);
+        if (id === "nova") {
+          pessoasServices.create(validatedData).then((res) => {
+            setIsLoading(false);
 
-        if (res instanceof Error) {
-          alert(res.message);
+            if (res instanceof Error) {
+              alert(res.message);
+              return;
+            }
+
+            if (isSaveAndBack()) {
+              alert("Registro criado com sucesso!");
+              navigate("/pessoas");
+              return;
+            }
+
+            alert("Registro criado com sucesso!");
+            navigate(`/pessoas/detalhe/${res}`);
+          });
+
           return;
         }
 
-        if (isSaveAndBack()) {
-          alert("Registro criado com sucesso!");
-          navigate("/pessoas");
-          return;
-        }
+        pessoasServices
+          .updateById(Number(id), { id: Number(id), ...validatedData })
+          .then((res) => {
+            setIsLoading(false);
 
-        alert("Registro criado com sucesso!");
-        navigate(`/pessoas/detalhe/${res}`);
+            if (res instanceof Error) {
+              alert(res.message);
+              return;
+            }
+
+            if (isSaveAndBack()) {
+              alert("Registro salvo com sucesso!");
+              navigate("/pessoas");
+              return;
+            }
+
+            alert("Registro salvo com sucesso!");
+          });
+
+        return;
+      })
+      .catch((errors: yup.ValidationError) => {
+        const validationErrors: IVFormErrors = {};
+
+        errors.inner.forEach((error) => {
+          if (!error.path) return;
+
+          validationErrors[error.path] = error.message;
+        });
+
+        formRef.current?.setErrors(validationErrors);
       });
-
-      return;
-    }
-
-    pessoasServices
-      .updateById(Number(id), { id: Number(id), ...data })
-      .then((res) => {
-        setIsLoading(false);
-
-        if (res instanceof Error) {
-          alert(res.message);
-          return;
-        }
-
-        if (isSaveAndBack()) {
-          alert("Registro salvo com sucesso!");
-          navigate("/pessoas");
-          return;
-        }
-
-        alert("Registro salvo com sucesso!");
-      });
-
-    return;
   };
 
   const handleDelete = (id: number) => {
