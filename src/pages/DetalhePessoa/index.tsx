@@ -1,12 +1,13 @@
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { Box, Grid, LinearProgress, Paper, Typography } from "@mui/material";
+
 import { DetailsToolbar } from "../../shared/components/DetailsToolbar";
 import { LayoutBasePage } from "../../shared/layouts/LayoutBasePage";
 import { pessoasServices } from "../../shared/services/api/pessoas/pessoasServices";
 import { VTextField } from "../../shared/forms/VTextField.tsx";
-import { Form } from "@unform/web";
-import { FormHandles } from "@unform/core";
-import { Box, Grid, LinearProgress, Paper, Typography } from "@mui/material";
+import { VForm } from "../../shared/forms/VForm";
+import { useVForm } from "../../shared/forms/hooks/useVForm";
 
 interface IFormData {
   email: string;
@@ -16,8 +17,8 @@ interface IFormData {
 
 export const DetalhePessoa: React.FC = () => {
   const { id = "nova" } = useParams<"id">();
+  const { formRef, save, saveAndBack, isSaveAndBack } = useVForm();
   const navigate = useNavigate();
-  const formRef = React.useRef<FormHandles>(null);
 
   const [isLoading, setIsLoading] = React.useState(false);
   const [name, setName] = React.useState("");
@@ -31,6 +32,12 @@ export const DetalhePessoa: React.FC = () => {
 
         if (res instanceof Error) {
           alert(res.message);
+          return;
+        }
+
+        if (isSaveAndBack()) {
+          alert("Registro criado com sucesso!");
+          navigate("/pessoas");
           return;
         }
 
@@ -48,6 +55,12 @@ export const DetalhePessoa: React.FC = () => {
 
         if (res instanceof Error) {
           alert(res.message);
+          return;
+        }
+
+        if (isSaveAndBack()) {
+          alert("Registro salvo com sucesso!");
+          navigate("/pessoas");
           return;
         }
 
@@ -87,7 +100,15 @@ export const DetalhePessoa: React.FC = () => {
         setName(res.nomeCompleto);
         formRef.current?.setData(res);
       });
+
+      return;
     }
+
+    formRef.current?.setData({
+      email: "",
+      cidadeId: "",
+      nomeCompleto: "",
+    });
   }, [id]);
 
   return (
@@ -102,12 +123,12 @@ export const DetalhePessoa: React.FC = () => {
           onClickInAdd={() => navigate("/pessoas/detalhe/nova")}
           onClickInBack={() => navigate("/pessoas")}
           onClickInDelete={() => handleDelete(Number(id))}
-          onClickInSave={() => formRef.current?.submitForm()}
-          onClickInSaveAndBack={() => formRef.current?.submitForm()}
+          onClickInSave={save}
+          onClickInSaveAndBack={saveAndBack}
         />
       }
     >
-      <Form ref={formRef} onSubmit={handleSave}>
+      <VForm ref={formRef} onSubmit={handleSave}>
         <Box
           display="flex"
           flexDirection="column"
@@ -159,7 +180,7 @@ export const DetalhePessoa: React.FC = () => {
             </Grid>
           </Grid>
         </Box>
-      </Form>
+      </VForm>
     </LayoutBasePage>
   );
 };
