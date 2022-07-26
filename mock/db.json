@@ -14,9 +14,9 @@
     },
     {
       "id": 9,
+      "nomeCompleto": "carlinhos maia",
       "email": "carlinhos@teupai.com",
-      "cidadeId": 1,
-      "nomeCompleto": "carlinhos da silva sauro"
+      "cidadeId": 1
     },
     {
       "id": 10,

@@ -22,13 +22,19 @@ export const VTextField: React.FC<TVTextFieldProps> = ({ name, ...props }) => {
 
   return (
     <TextField
+      {...props}
       value={value}
-      onChange={(e) => setValue(e.target.value)}
+      onChange={(e) => {
+        setValue(e.target.value);
+        props.onChange?.(e);
+      }}
       error={!!error}
       helperText={error}
       defaultValue={defaultValue}
-      onKeyDown={() => (error ? clearError() : undefined)}
-      {...props}
+      onKeyDown={(e) => {
+        error && clearError();
+        props.onKeyDown?.(e);
+      }}
     />
   );
 };
