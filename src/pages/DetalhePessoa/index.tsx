@@ -130,7 +130,7 @@ export const DetalhePessoa: React.FC = () => {
 
     formRef.current?.setData({
       email: "",
-      cidadeId: "",
+      cidadeId: undefined,
       nomeCompleto: "",
     });
   }, [id]);
@@ -194,7 +194,7 @@ export const DetalhePessoa: React.FC = () => {
             </Grid>
             <Grid container item direction="row">
               <Grid item xs={12}>
-                <AutoComplete />
+                <AutoComplete isExternalLoading={isLoading} />
               </Grid>
             </Grid>
           </Grid>

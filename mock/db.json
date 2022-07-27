@@ -8,9 +8,9 @@
     },
     {
       "id": 8,
+      "nomeCompleto": "gustavo da silva sauro",
       "email": "gustavo@teupai.com",
-      "cidadeId": 1,
-      "nomeCompleto": "gustavo da silva sauro"
+      "cidadeId": 2
     },
     {
       "id": 9,
@@ -53,6 +53,26 @@
     {
       "id": 1,
       "nome": "Guaramirim"
+    },
+    {
+      "nome": "Jaraguá do Sul",
+      "id": 2
+    },
+    {
+      "nome": "Joinville",
+      "id": 3
+    },
+    {
+      "nome": "Blumenau",
+      "id": 4
+    },
+    {
+      "nome": "Garuva",
+      "id": 5
+    },
+    {
+      "nome": "Gaspar",
+      "id": 6
     }
   ]
 }
