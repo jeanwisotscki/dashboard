@@ -48,5 +48,11 @@
       "email": "bife@mail.com",
       "cidadeId": "3"
     }
+  ],
+  "cidades": [
+    {
+      "id": 1,
+      "nome": "Guaramirim"
+    }
   ]
 }

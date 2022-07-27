@@ -18,24 +18,24 @@ import { ListingToolbar } from "../../shared/components/ListingToolbar";
 import { useDebounce } from "../../shared/hooks/useDebounce";
 import { LayoutBasePage } from "../../shared/layouts/LayoutBasePage";
 import {
-  IListagemPessoa,
-  pessoasServices,
-} from "../../shared/services/api/pessoas/pessoasServices";
+  IListagemCidade,
+  cidadesServices,
+} from "../../shared/services/api/cidades/cidadesServices";
 import { Environment } from "../../shared/environment";
 
-export const Pessoas: React.FC = () => {
+export const Cidades: React.FC = () => {
   const navigate = useNavigate();
 
   const [searchParams, setSearchParams] = useSearchParams();
   const { debounce } = useDebounce(1000, true);
 
-  const [rows, setRows] = React.useState<IListagemPessoa[]>([]);
+  const [rows, setRows] = React.useState<IListagemCidade[]>([]);
   const [totalCount, setTotalCount] = React.useState(0);
   const [isLoading, setIsLoading] = React.useState(true);
 
   const handleDelete = (id: number) => {
     if (confirm("Realmente deseja apagar o registro?")) {
-      pessoasServices.deleteById(id).then((res) => {
+      cidadesServices.deleteById(id).then((res) => {
         if (res instanceof Error) {
           alert(res.message);
           return;
@@ -60,7 +60,7 @@ export const Pessoas: React.FC = () => {
     setIsLoading(true);
 
     debounce(() => {
-      pessoasServices.getAll(pagina, busca).then((res) => {
+      cidadesServices.getAll(pagina, busca).then((res) => {
         setIsLoading(false);
 
         if (res instanceof Error) {
@@ -77,7 +77,7 @@ export const Pessoas: React.FC = () => {
 
   return (
     <LayoutBasePage
-      titulo="Listagem de pessoas"
+      titulo="Listagem de cidades"
       toolbar={
         <ListingToolbar
           addButtonText="Nova"
@@ -86,7 +86,7 @@ export const Pessoas: React.FC = () => {
           onChangeSearchText={(text) =>
             setSearchParams({ busca: text, pagina: "1" }, { replace: true })
           }
-          onClickAddButton={() => navigate("/pessoas/detalhe/nova")}
+          onClickAddButton={() => navigate("/cidades/detalhe/nova")}
         />
       }
     >
@@ -99,8 +99,7 @@ export const Pessoas: React.FC = () => {
           <TableHead>
             <TableRow>
               <TableCell width={100}>Ações</TableCell>
-              <TableCell>Nome completo</TableCell>
-              <TableCell>Email</TableCell>
+              <TableCell>Nome</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -111,14 +110,13 @@ export const Pessoas: React.FC = () => {
                     <Icon>delete</Icon>
                   </IconButton>
                   <IconButton
-                    onClick={() => navigate(`/pessoas/detalhe/${row.id}`)}
+                    onClick={() => navigate(`/cidades/detalhe/${row.id}`)}
                     size="small"
                   >
                     <Icon>edit</Icon>
                   </IconButton>
                 </TableCell>
-                <TableCell>{row.nomeCompleto}</TableCell>
-                <TableCell>{row.email}</TableCell>
+                <TableCell>{row.nome}</TableCell>
               </TableRow>
             ))}
           </TableBody>
