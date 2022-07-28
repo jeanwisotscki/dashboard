@@ -43,7 +43,7 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
   React.useEffect(() => {
     const accessToken = localStorage.getItem(LOCAL_STORAGE_KEY__ACCESS_TOKEN);
 
-    if (accessToken) return setAccessToken(JSON.parse(accessToken));
+    if (accessToken) return setAccessToken(accessToken);
 
     setAccessToken(undefined);
   }, []);
@@ -56,3 +56,5 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
     </AuthContext.Provider>
   );
 };
+
+export const useAuthContext = () => React.useContext(AuthContext);

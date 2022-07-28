@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import { Box } from "@mui/system";
 import { useMatch, useNavigate, useResolvedPath } from "react-router-dom";
+import { useAuthContext } from "../../contexts/AuthContext";
 import { useDrawerContext } from "../../contexts/DrawerContext";
 import { useAppThemeContext } from "../../contexts/ThemeContext";
 
@@ -56,6 +57,7 @@ export const Sidebar: React.FC<ISidebarProps> = ({ children }) => {
   const smDown = useMediaQuery(theme.breakpoints.down("sm"));
   const { isDrawerOpen, toggleDrawerOpen, drawerOptions } = useDrawerContext();
   const { toggleTheme, themeName } = useAppThemeContext();
+  const { logout } = useAuthContext();
 
   return (
     <>
@@ -106,6 +108,13 @@ export const Sidebar: React.FC<ISidebarProps> = ({ children }) => {
                   </Icon>
                 </ListItemIcon>
                 <ListItemText primary="Alternar tema" />
+              </ListItemButton>
+
+              <ListItemButton onClick={logout}>
+                <ListItemIcon>
+                  <Icon color="error">logout</Icon>
+                </ListItemIcon>
+                <ListItemText primary="Sair" />
               </ListItemButton>
             </List>
           </Box>
