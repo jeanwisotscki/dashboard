@@ -9,20 +9,20 @@ const auth = async (
   password: string
 ): Promise<IAuth | Error> => {
   try {
-    const { data } = await Api.get();
+    const { data } = await Api.get("/auth", { data: { email, password } });
 
     if (data) {
-      return data.id;
+      return data;
     }
 
-    return new Error("Erro ao cadastrar o registro.");
+    return new Error("Erro no login.");
   } catch (error) {
     console.error(error);
 
     return new Error(
-      (error as { message: string }).message || "Erro ao cadastrar o registro."
+      (error as { message: string }).message || "Erro no login."
     );
   }
 };
 
-export const authService = {};
+export const authService = { auth };
