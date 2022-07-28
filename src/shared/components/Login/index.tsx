@@ -1,9 +1,11 @@
 import React from "react";
+import * as yup from "yup";
 import {
   Button,
   Card,
   CardActions,
   CardContent,
+  CircularProgress,
   TextField,
   Typography,
 } from "@mui/material";
@@ -14,11 +16,40 @@ interface ILoginProps {
   children: React.ReactNode;
 }
 
+const loginSchema = yup.object().shape({
+  email: yup.string().email().required(),
+  password: yup.string().required().min(5),
+});
+
 export const Login: React.FC<ILoginProps> = ({ children }) => {
   const { isAuthenticated, login } = useAuthContext();
 
+  const [isLoading, setIsLoading] = React.useState(false);
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
+  const [emailError, setEmailError] = React.useState("");
+  const [passwordError, setPasswordError] = React.useState("");
+
+  const handleSubmit = () => {
+    loginSchema
+      .validate({ email, password }, { abortEarly: false })
+      .then((dadosValidados) => {
+        setIsLoading(true);
+
+        login(dadosValidados.email, dadosValidados.password).then(() => {
+          setIsLoading(false);
+        });
+      })
+      .catch((errors: yup.ValidationError) => {
+        setIsLoading(false);
+
+        errors.inner.forEach((error) => {
+          if (error.path === "email") return setEmailError(error.message);
+
+          if (error.path === "password") return setPasswordError(error.message);
+        });
+      });
+  };
 
   if (isAuthenticated) return <>{children}</>;
 
@@ -42,6 +73,10 @@ export const Login: React.FC<ILoginProps> = ({ children }) => {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              onInput={() => setEmailError("")}
+              error={!!emailError}
+              helperText={emailError}
+              disabled={isLoading}
             />
             <TextField
               fullWidth
@@ -49,12 +84,29 @@ export const Login: React.FC<ILoginProps> = ({ children }) => {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              onInput={() => setPasswordError("")}
+              error={!!passwordError}
+              helperText={passwordError}
+              disabled={isLoading}
             />
           </Box>
         </CardContent>
         <CardActions>
           <Box width="100%" display="flex" justifyContent="center">
-            <Button variant="contained" onClick={() => login("", "")}>
+            <Button
+              variant="contained"
+              onClick={handleSubmit}
+              disabled={isLoading}
+              startIcon={
+                isLoading ? (
+                  <CircularProgress
+                    variant="indeterminate"
+                    color="inherit"
+                    size={15}
+                  />
+                ) : undefined
+              }
+            >
               Entrar
             </Button>
           </Box>
