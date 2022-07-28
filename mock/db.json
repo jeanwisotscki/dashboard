@@ -74,5 +74,8 @@
       "nome": "Gaspar",
       "id": 6
     }
-  ]
+  ],
+  "auth": {
+    "accessToken": "a1b2c3d4e5"
+  }
 }
